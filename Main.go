@@ -1,38 +1,49 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func main() {
 
-	fmt.Println("Hour(s): ")
-	var hours float64
-	fmt.Scanln(&hours)
-
-	fmt.Println("Minute(s): ")
-	var minutes float64
-	fmt.Scanln(&minutes)
-
-	fmt.Println("Speed Rate (Ex: 1.25): ")
+	var hours int
+	var minutes int
 	var speed float64
-	fmt.Scanln(&speed)
 
-	var result float64
+	fmt.Print("Hour(s): ")
+	fmt.Scan(&hours)
 
-	if hours == 0 {
-		hours = 60 * 0
-		result = (hours + minutes) / speed
+	fmt.Print("Minute(s): ")
+	fmt.Scan(&minutes)
 
-		var result int = int(result)
+	fmt.Print("Speed Rate (Ex: 1.25): ")
+	fmt.Scan(&speed)
 
-		println("You will need ", result, " minutes to finish this video")
-
+	result, err := calculateResult(hours, minutes, speed)
+	if err != nil {
+		panic(err)
 	} else {
-		hours = 60 * hours
-		result = (hours + minutes) / speed
+		fmt.Println("You need", result, "minutes to finish this video.")
+	}
 
-		var result int = int(result)
+}
 
-		println("You will need ", result, " minutes to finish this video")
+func calculateResult(hour int, minute int, speed float64) (int, error) {
+
+	if minute > 60 {
+		return 0, errors.New("Minutes can not be bigger than 60!")
+	}
+
+	if hour != 0 {
+		hour = 60 * hour
+
+		result := (float64(hour) + float64(minute)) / speed
+
+		return int(result), nil
 
 	}
+	result := (float64(hour) + float64(minute)) / speed
+
+	return int(result), nil
 }
